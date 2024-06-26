@@ -21,16 +21,20 @@ const nextConfig = {
         destination: '/source/:path*/folio-:id.html',
       },
       {
-      source: '/translation/:path',
-      destination: '/translation/:path*/index.html',
+      source: '/translation/:path*',
+      destination: 'https://data-static.vercel.app/translation/:path*',
+      },
+      {
+        source: '/frontend/:path*',
+        destination: 'https://data-static.vercel.app/frontend/:path*',
       },
       {
         source: '/glossary/:path*',
-        destination: '/glossary/named-entities/entity-:path*.html',
+        destination: 'https://data-static.vercel.app/glossary/named-entities/entity-:path*.html',
       },
       {
         source: '/old/:path*',
-        destination: '/old-site/:path*/index.html',
+        destination: 'https://data-static.vercel.app/old-site/:path*/index.html',
       },
       {source: "/:path((?!translation|old|glossary|_next|public|assets|images|api|sitemap-0.xml).*)",
         destination: "https://84000.webflow.io/:path*"
