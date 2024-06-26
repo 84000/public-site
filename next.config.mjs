@@ -18,7 +18,7 @@ const nextConfig = {
       // },
       {
         source: '/source/:path*/folio/:id',
-        destination: '/source/:path*/folio-:id.html',
+        destination: 'https://data-static.vercel.app/source/:path*/folio-:id.html',
       },
       {
       source: '/translation/:path*',
