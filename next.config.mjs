@@ -4,6 +4,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/translation/:path.html',
+        destination: '/translation/:path',
+        permanent: true,
+      },
+      {
         source: '/glossary/entity-:path.html',
         destination: '/glossary/:path',
         permanent: true,
