@@ -12,10 +12,10 @@ const nextConfig = {
   },
   async rewrites() {
     return [
-      // {
-      //   source: '/translation/:path/:id',
-      //   destination: '/translation/:path/:id.html',
-      // },
+      {
+         source: '/translation/:path*/:id',
+         destination: 'https://data-static.vercel.app/translation/:path/:id.html',
+      },
       {
         source: '/source/:path*/folio/:id',
         destination: 'https://data-static.vercel.app/source/:path*/folio-:id.html',
