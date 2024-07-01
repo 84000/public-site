@@ -37,7 +37,7 @@ const nextConfig = {
         destination: 'https://data-static.vercel.app/old-site/:path*/index.html',
       },
       {source: "/:path((?!translation|old|glossary|_next|public|assets|images|api|sitemap-0.xml).*)",
-        destination: "https://84000.webflow.io/:path*"
+        destination: "https://84000.vercel.app/:path*"
       },
     ];
   },
