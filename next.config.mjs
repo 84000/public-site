@@ -24,9 +24,9 @@ const nextConfig = {
         destination: 'https://data-static.vercel.app/translation/:id/:id.:format',
       },
       {
-         source: '/translation/:path/:id',
-         destination: 'https://data-static.vercel.app/translation/:path*/:id.html',
-         // /translation/toh1-1/UT22084-029-001/toh3808 -> /translation/toh1-1/toh3808/UT22084-001-001.html
+        source: '/translation/:path/:id',
+        destination: 'https://data-static.vercel.app/translation/:path*/:id.html',
+      },{// /translation/toh1-1/UT22084-029-001/toh3808 -> /translation/toh1-1/toh3808/UT22084-001-001.html
          source: '/translation/:work/:part/:commentary',
          destination: 'https://data-static.vercel.app/translation/:work/commentary-:commentary/:part.html',
       },
