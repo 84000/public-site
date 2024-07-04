@@ -66,7 +66,7 @@ const nextConfig = {
       },
       {
         source: "/:path((?!translation|old|glossary|_next|public|assets|images|api|sitemap-0.xml).*)",
-        destination: "https://84000.vercel.app/:path*"
+        destination: "https://84000.webflow.io/:path*"
       },
     ];
   },
