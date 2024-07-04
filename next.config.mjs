@@ -36,15 +36,16 @@ const nextConfig = {
          destination: 'https://data-static.vercel.app/translation/:work/:part.html',
       },
       {
+        // /translation/toh1-1 -> /translation/toh1-1/index.html
+        source: '/translation/:work',
+        destination: 'https://data-static.vercel.app/translation/:work/index.html',
+      },
+      {
         // /source/toh1-1/folio/1 -> /source/toh1-1/folio-1.html
         source: '/source/:work/folio/:index',
         destination: 'https://data-static.vercel.app/source/:work/folio-:index.html',
       },
-      {
-      	 // /translation/toh1-1 -> /translation/toh1-1/index.html
-         source: '/translation/:work',
-         destination: 'https://data-static.vercel.app/translation/:work/index.html',
-      },
+
       {
       	// /glossary/123 -> /glossary/named-entities/entity-123.html
         source: '/glossary/:id',
