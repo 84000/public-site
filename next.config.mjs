@@ -36,12 +36,6 @@ const nextConfig = {
          destination: 'https://data-static.vercel.app/translation/:work/:part.html',
       },
       {
-      	 // /translation/toh1-1.pdf -> /translation/toh1-1/toh1-1.pdf
-         source: '/translation/:work([^\.]*):extension(\.pdf|\.epub)',
-         destination: 'https://data-static.vercel.app/translation/:work/:work:extension',
-      },
-
-      {
       	 // /translation/toh1-1 -> /translation/toh1-1/index.html
          source: '/translation/:work',
          destination: 'https://data-static.vercel.app/translation/:work/index.html',
