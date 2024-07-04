@@ -18,9 +18,14 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/translation/:id.:format',
+        destination: 'https://data-static.vercel.app/translation/:id/:id.:format',
+      },
+      {
          source: '/translation/:path/:id',
          destination: 'https://data-static.vercel.app/translation/:path*/:id.html',
       },
+
       {
         source: '/source/:path*/folio/:id',
         destination: 'https://data-static.vercel.app/source/:path*/folio-:id.html',
