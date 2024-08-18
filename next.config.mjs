@@ -18,14 +18,14 @@ const nextConfig = {
     ];
   },
   async rewrites() {
-    return [
+    return [/*
       {  // translation/toh52.pdf -> translation/toh52/toh52.pdf
         source: '/translation/:id.:format',
         destination: 'https://data-static.vercel.app/translation/:id/:id.:format',
       },
       {
         source: '/translation/:path/:id',
-        destination: 'https://data-static.vercel.app/translation/:path*/:id.html',
+        destination: 'https://data-static.vercel.app/translation/:path*!/:id.html',
       },{// /translation/toh1-1/UT22084-029-001/toh3808 -> /translation/toh1-1/toh3808/UT22084-001-001.html
          source: '/translation/:work/:part/:commentary',
          destination: 'https://data-static.vercel.app/translation/:work/commentary-:commentary/:part.html',
@@ -50,7 +50,7 @@ const nextConfig = {
       	// /glossary/123 -> /glossary/named-entities/entity-123.html
         source: '/glossary/:id',
         destination: 'https://data-static.vercel.app/glossary/named-entities/entity-:id.html',
-      },
+      },*/
       {
         source: '/frontend/:path*',
         destination: 'https://data-static.vercel.app/frontend/:path*',
