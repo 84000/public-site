@@ -61,7 +61,7 @@ const nextConfig = {
       },
       {
         source: "/:path((?!translation|old|glossary|_next|public|assets|images|api|sitemap-0.xml).*)",
-        destination: "https://84000.webflow.io/:path*"
+        destination: "https://site.84000.co/:path*"
       },
     ];
   },
