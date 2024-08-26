@@ -18,8 +18,7 @@ const nextConfig = {
     ];
   },
   async rewrites() {
-    return [/*
-      {  // translation/toh52.pdf -> translation/toh52/toh52.pdf
+    return [{  // translation/toh52.pdf -> translation/toh52/toh52.pdf
         source: '/translation/:id.:format',
         destination: 'https://data-static.vercel.app/translation/:id/:id.:format',
       },
@@ -50,7 +49,7 @@ const nextConfig = {
       	// /glossary/123 -> /glossary/named-entities/entity-123.html
         source: '/glossary/:id',
         destination: 'https://data-static.vercel.app/glossary/named-entities/entity-:id.html',
-      },*/
+      },
       {
         source: '/frontend/:path*',
         destination: 'https://data-static.vercel.app/frontend/:path*',
