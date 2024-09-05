@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
+
+const staticHost = 'https://static.84000.co';
+const searchHost = 'https://read.84000-translate.org';
+const siteHost = 'https://site.84000.co';
+
 const nextConfig = {
   reactStrictMode: true,
   async redirects() {
@@ -18,49 +23,58 @@ const nextConfig = {
     ];
   },
   async rewrites() {
-    return [{  // translation/toh52.pdf -> translation/toh52/toh52.pdf
-        source: '/translation/:id.:format',
-        destination: 'https://data-static.vercel.app/translation/:id/:id.:format',
+    return [
+      {
+        // /glossary-embedded/search.html -> /glossary-embedded/search.html
+        source: '/glossary-embedded/:path*',
+        destination: `${ searchHost }/glossary-embedded/:path*`,
       },
       {
-        source: '/translation/:path/:id',
-        destination: 'https://data-static.vercel.app/translation/:path*!/:id.html',
-      },{// /translation/toh1-1/UT22084-029-001/toh3808 -> /translation/toh1-1/toh3808/UT22084-001-001.html
-         source: '/translation/:work/:part/:commentary',
-         destination: 'https://data-static.vercel.app/translation/:work/commentary-:commentary/:part.html',
+        // /search-tm-embedded.html -> /search-tm-embedded.html
+        source: '/search-tm-embedded.html',
+        destination: `${ searchHost }/search-tm-embedded.html`,
       },
       {
-         // /translation/toh1-1/UT22084-001-001 -> /translation/toh1-1/UT22084-001-001.html
-         source: '/translation/:work/:part',
-         destination: 'https://data-static.vercel.app/translation/:work/:part.html',
+        // /translation/toh1-1/UT22084-029-001/toh3808 -> /translation/toh1-1/toh3808/UT22084-001-001.html
+        source: '/translation/:work/:part/:commentary',
+        destination: `${ staticHost }/translation/:work/commentary-:commentary/:part.html`,
+      },
+      {
+        // /translation/toh1-1/UT22084-001-001 -> /translation/toh1-1/UT22084-001-001.html
+        source: '/translation/:work/:part',
+        destination: `${ staticHost }/translation/:work/:part.html`,
+      },
+      {  
+        // translation/toh52.pdf -> translation/toh52/toh52.pdf
+        source: '/translation/:work.:format',
+        destination: `${ staticHost }/translation/:work/:work.:format`,
       },
       {
         // /translation/toh1-1 -> /translation/toh1-1/index.html
         source: '/translation/:work',
-        destination: 'https://data-static.vercel.app/translation/:work/index.html',
+        destination: `${ staticHost }/translation/:work/index.html`,
       },
       {
         // /source/toh1-1/folio/1 -> /source/toh1-1/folio-1.html
         source: '/source/:work/folio/:index',
-        destination: 'https://data-static.vercel.app/source/:work/folio-:index.html',
+        destination: `${ staticHost }/source/:work/folio-:index.html`,
       },
-
       {
       	// /glossary/123 -> /glossary/named-entities/entity-123.html
         source: '/glossary/:id',
-        destination: 'https://data-static.vercel.app/glossary/named-entities/entity-:id.html',
+        destination: `${ staticHost }/glossary/named-entities/entity-:id.html`,
       },
       {
         source: '/frontend/:path*',
-        destination: 'https://data-static.vercel.app/frontend/:path*',
+        destination: `${ staticHost }/frontend/:path*`,
       },
       {
         source: '/old/:path*',
-        destination: 'https://data-static.vercel.app/old-site/:path*/index.html',
+        destination: `${ staticHost }/old-site/:path*/index.html`,
       },
       {
         source: "/:path((?!translation|old|glossary|_next|public|assets|images|api|sitemap-0.xml).*)",
-        destination: "https://site.84000.co/:path*"
+        destination: `${ staticHost }/:path*`
       },
     ];
   },
