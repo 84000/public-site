@@ -74,7 +74,7 @@ const nextConfig = {
       },
       {
         source: "/:path((?!translation|old|glossary|_next|public|assets|images|api|sitemap-0.xml).*)",
-        destination: `${ staticHost }/:path*`
+        destination: `${ siteHost }/:path*`
       },
     ];
   },
