@@ -15,6 +15,19 @@ const nextConfig = {
         permanent: true,
       },
       {
+        // Support legacy links with .html extension and ref-index parameter
+        source: '/source/:id.html',
+        has: [
+          {
+            type: 'query',
+            key: 'ref-index',
+            value: '(?<index>\\d{1,})',
+          },
+        ],
+        destination: '/source/:id/folio/:index',
+        permanent: true,
+      },
+      {
       	// Truncate "entity" from entity-id
         source: '/glossary/entity-:id.html',
         destination: '/glossary/:id',
