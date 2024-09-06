@@ -9,7 +9,7 @@ const nextConfig = {
   async redirects() {
     return [
       {
-      	// Resolve UT ids
+        // Resolve UT ids
         source: '/translation/UT:path',
         destination: '/translation-redirect/UT:path',
         permanent: false,
@@ -34,7 +34,7 @@ const nextConfig = {
         permanent: true,
       },
       {
-      	// Truncate "entity" from entity-id
+        // Truncate "entity" from entity-id
         source: '/glossary/entity-:id.html',
         destination: '/glossary/:id',
         permanent: true,
@@ -63,7 +63,7 @@ const nextConfig = {
         source: '/translation/:work/:part',
         destination: `${ staticHost }/translation/:work/:part.html`,
       },
-      {  
+      {
         // translation/toh52.pdf -> translation/toh52/toh52.pdf
         source: '/translation/:work.:format',
         destination: `${ staticHost }/translation/:work/:work.:format`,
@@ -79,7 +79,7 @@ const nextConfig = {
         destination: `${ staticHost }/source/:work/folio-:index.html`,
       },
       {
-      	// /glossary/123 -> /glossary/named-entities/entity-123.html
+        // /glossary/123 -> /glossary/named-entities/entity-123.html
         source: '/glossary/:id',
         destination: `${ staticHost }/glossary/named-entities/entity-:id.html`,
       },

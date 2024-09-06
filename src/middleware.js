@@ -11,8 +11,8 @@ export function middleware(request) {
   })
 
   // TO DO: is this correct for 404?
-  if(!workId) {
-    notFound()
+  if (!workId) {
+    return NextResponse.redirect(new URL('/not-found', request.url));
   }
 
   return NextResponse.redirect(new URL('/translation/'+ workId.destination, request.url))
