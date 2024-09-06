@@ -9,6 +9,12 @@ const nextConfig = {
   async redirects() {
     return [
       {
+      	// Resolve UT ids
+        source: '/translation/UT:path',
+        destination: '/translation-redirect/UT:path',
+        permanent: false,
+      },
+      {
         // Support legacy links with .html extension
         source: '/translation/:id.html',
         destination: '/translation/:id',
