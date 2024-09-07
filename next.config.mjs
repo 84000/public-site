@@ -92,7 +92,7 @@ const nextConfig = {
         destination: `${ staticHost }/old-site/:path*/index.html`,
       },
       {
-        source: "/:path((?!translation|old|glossary|_next|public|assets|images|api|sitemap-0.xml).*)",
+        source: "/:path((?!translation/|old|glossary/|_next|public|assets|images|api|sitemap-0.xml).*)",
         destination: `${ siteHost }/:path*`
       },
     ];
