@@ -10,7 +10,6 @@ export function middleware(request) {
     return workId.source === sourceId[1]
   })
 
-  // TO DO: is this correct for 404?
   if (!workId) {
     return NextResponse.redirect(new URL('/not-found', request.url));
   }

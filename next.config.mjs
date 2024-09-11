@@ -39,6 +39,12 @@ const nextConfig = {
         destination: '/glossary/:id',
         permanent: true,
       },
+      {
+        // Resolve purls
+        source: '/resource/core/wae:id',
+        destination: '/translation/:id',
+        permanent: false,
+      },
     ];
   },
   async rewrites() {
