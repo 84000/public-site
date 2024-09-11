@@ -45,6 +45,12 @@ const nextConfig = {
         destination: '/translation/:id',
         permanent: false,
       },
+      {
+        // /section/all-translated.json -> /catalogue/all-translated.json
+        source: '/section/:path',
+        destination: '/catalogue/:path',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
@@ -90,6 +96,10 @@ const nextConfig = {
         destination: `${ staticHost }/glossary/named-entities/entity-:id.html`,
       },
       {
+        source: '/catalogue/:path*',
+        destination: `${ staticHost }/catalogue/:path*`,
+      },
+      {
         source: '/frontend/:path*',
         destination: `${ staticHost }/frontend/:path*`,
       },
@@ -98,7 +108,7 @@ const nextConfig = {
         destination: `${ staticHost }/old-site/:path*/index.html`,
       },
       {
-        source: "/:path((?!translation/|old|glossary/|_next|public|assets|images|api|sitemap-0.xml).*)",
+        source: "/:path((?!translation/|old|glossary/|source/|_next|public|assets|images|api|sitemap-0.xml).*)",
         destination: `${ siteHost }/:path*`
       },
     ];
