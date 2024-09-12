@@ -45,12 +45,12 @@ const nextConfig = {
         destination: '/translation/:id',
         permanent: false,
       },
-      {
+      /*{
         // /section/all-translated.json -> /catalogue/all-translated.json
         source: '/section/:path',
         destination: '/catalogue/:path',
         permanent: true,
-      },
+      },*/
     ];
   },
   async rewrites() {
