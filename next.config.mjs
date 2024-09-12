@@ -45,12 +45,6 @@ const nextConfig = {
         destination: '/translation/:id',
         permanent: false,
       },
-      /*{
-        // /section/all-translated.json -> /catalogue/all-translated.json
-        source: '/section/:path',
-        destination: '/catalogue/:path',
-        permanent: true,
-      },*/
     ];
   },
   async rewrites() {
@@ -102,6 +96,16 @@ const nextConfig = {
       {
         source: '/frontend/:path*',
         destination: `${ staticHost }/frontend/:path*`,
+      },
+      {
+        // /.well-known/assetlinks.json -> /mobile-app/assetlinks.json
+        source: '/.well-known/:file.json',
+        destination: `${ staticHost }/mobile-app/:file.json`,
+      },
+      {
+        // /.well-known/apple-app-site-association -> /mobile-app/apple-app-site-association.json
+        source: '/.well-known/:file',
+        destination: `${ staticHost }/mobile-app/:file.json`,
       },
       {
         source: '/old/:path*',
