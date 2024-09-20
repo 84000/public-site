@@ -3,6 +3,7 @@
 const staticHost = 'https://static.84000.co';
 const searchHost = 'https://read.84000-translate.org';
 const siteHost = 'https://site.84000.co';
+const seed = '?seed=true';
 
 const nextConfig = {
   reactStrictMode: true,
@@ -118,7 +119,7 @@ const nextConfig = {
       },
       {
         source: "/:path((?!translation/|old|glossary/|source/|_next|public|assets|images|api|sitemap-0.xml).*)",
-        destination: `${ siteHost }/:path*`
+        destination: `${ siteHost }/:path*${ seed }`
       },
     ];
   },
