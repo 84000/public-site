@@ -108,6 +108,11 @@ const nextConfig = {
         destination: `${ staticHost }/mobile-app/:file.json`,
       },
       {
+        // /robots.txt -> /catalogue/robots.txt
+        source: '/robots.txt',
+        destination: `${ staticHost }/catalogue/robots.txt`,
+      },
+      {
         source: '/old/:path*',
         destination: `${ staticHost }/old-site/:path*/index.html`,
       },
