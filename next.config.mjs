@@ -40,6 +40,12 @@ const nextConfig = {
         permanent: true,
       },
       {
+        // Glossary search
+        source: '/glossary/search.html',
+        destination: '/glossary-search',
+        permanent: true,
+      },
+      {
         // Resolve purls
         source: '/resource/core/wae:id',
         destination: '/translation/:id',
