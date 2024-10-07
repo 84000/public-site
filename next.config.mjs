@@ -13,7 +13,7 @@ const nextConfig = {
         // Resolve UT ids
         source: '/translation/UT:path',
         destination: '/translation-redirect/UT:path',
-        permanent: false,
+        permanent: true,
       },
       {
         // Support legacy links with .html extension
@@ -48,9 +48,9 @@ const nextConfig = {
       },
       {
         // Resolve purls
-        source: '/resource/core/wae:id',
+        source: '/resource/core/WAE:id',
         destination: '/translation/:id',
-        permanent: false,
+        permanent: true,
       },
     ];
   },
