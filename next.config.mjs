@@ -11,8 +11,14 @@ const nextConfig = {
     return [
       {
         // Resolve UT ids
-        source: '/translation/UT:path',
-        destination: '/translation-redirect/UT:path',
+        source: '/translation/UT:id',
+        destination: '/translation-redirect/UT:id',
+        permanent: true,
+      },
+      {
+        // Resolve purls
+        source: '/resource/core/WAE:id',
+        destination: '/translation-redirect/WAE:id',
         permanent: true,
       },
       {
@@ -44,12 +50,6 @@ const nextConfig = {
         // Glossary search
         source: '/glossary/search.html',
         destination: '/glossary-search',
-        permanent: true,
-      },
-      {
-        // Resolve purls
-        source: '/resource/core/WAE:id',
-        destination: '/translation/:id',
         permanent: true,
       },
     ];
