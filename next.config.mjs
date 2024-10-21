@@ -105,6 +105,14 @@ const nextConfig = {
         destination: `${ staticHost }/frontend/:path*`,
       },
       {
+        source: '/images/:path*',
+        destination: `${ staticHost }/images/:path*`,
+      },
+      {
+        source: '/audio/:path*',
+        destination: `${ staticHost }/audio/:path*`,
+      },
+      {
         // /.well-known/assetlinks.json -> /mobile-app/assetlinks.json
         source: '/.well-known/:file.json',
         destination: `${ staticHost }/mobile-app/:file.json`,
