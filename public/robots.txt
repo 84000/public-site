@@ -8,3 +8,6 @@ Host: https://84000.co
 # Sitemaps
 Sitemap: https://84000.co/sitemap.xml
 Sitemap: https://84000.co/website-sitemap.xml
+Sitemap: https://84000.co/translation-sitemap.xml
+Sitemap: https://84000.co/source-sitemap.xml
+Sitemap: https://84000.co/glossary-sitemap.xml
