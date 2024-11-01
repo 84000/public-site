@@ -122,10 +122,22 @@ const nextConfig = {
         source: '/.well-known/:file',
         destination: `${ staticHost }/mobile-app/:file.json`,
       },
+      // {
+      //   // /robots.txt -> /catalogue/robots.txt
+      //   source: '/robots.txt',
+      //   destination: `${ staticHost }/catalogue/robots.txt`,
+      // },
       {
-        // /robots.txt -> /catalogue/robots.txt
-        source: '/robots.txt',
-        destination: `${ staticHost }/catalogue/robots.txt`,
+        source: '/translation-sitemap.xml',
+        destination: `${ staticHost }/translation/sitemap.xml`,
+      },
+      {
+        source: '/source-sitemap.xml',
+        destination: `${ staticHost }/source/sitemap.xml`,
+      },
+      {
+        source: '/glossary-sitemap.xml',
+        destination: `${ staticHost }/glossary/named-entities/sitemap.xml`,
       },
       {
         source: '/old/:path*',
