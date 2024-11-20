@@ -36,6 +36,11 @@ const nextConfig = {
             key: 'ref-index',
             value: '(?<index>\\d{1,})',
           },
+           {
+            type: 'query',
+            key: 'page',
+            value: '(?<index>\\d{1,})',
+          },
         ],
         destination: '/source/:id/folio/:index',
         permanent: true,
