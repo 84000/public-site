@@ -28,23 +28,23 @@ const nextConfig = {
         permanent: true,
       },
       {
-        // Support legacy links with .html extension and ref-index parameter
-        source: '/source/:id.html',
-        has: [
-          {
-            type: 'query',
-            key: 'ref-index',
-            value: '(?<index>\\d{1,})',
-          },
-           {
-            type: 'query',
-            key: 'page',
-            value: '(?<index>\\d{1,})',
-          },
-        ],
-        destination: '/source/:id/folio/:index',
-        permanent: true,
-      },
+  source: '/source/:id.html',
+  has: [
+    {
+      type: 'query',
+      key: 'ref-index',
+      value: '(?<refIndex>\\d{1,})',
+    },
+    {
+      type: 'query',
+      key: 'page',
+      value: '(?<pageIndex>\\d{1,})',
+    },
+  ],
+  destination: '/source/:id/folio/:refIndex-page/:pageIndex',
+  permanent: true,
+},
+
       {
         // Truncate "entity" from entity-id
         source: '/glossary/entity-:id.html',
