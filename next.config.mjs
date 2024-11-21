@@ -28,6 +28,18 @@ const nextConfig = {
         permanent: true,
       },
       {
+        // Resolve UT ids
+        source: '/source/UT:id',
+        destination: '/source-redirect/UT:id',
+        permanent: true,
+      },
+      {
+        // Resolve UT ids
+        source: '/source/UT:id/folio/:index',
+        destination: '/source-redirect/UT:id/folio/:index',
+        permanent: true,
+      },
+      {
         // Support legacy links with .html extension and ref-index parameter
         source: '/source/:id.html',
         has: [
@@ -36,7 +48,15 @@ const nextConfig = {
             key: 'ref-index',
             value: '(?<index>\\d{1,})',
           },
-           {
+        ],
+        destination: '/source/:id/folio/:index',
+        permanent: true,
+      },
+      {
+        // Support legacy links with .html extension and page parameter
+        source: '/source/:id.html',
+        has: [
+          {
             type: 'query',
             key: 'page',
             value: '(?<index>\\d{1,})',
@@ -48,6 +68,12 @@ const nextConfig = {
       {
         // Truncate "entity" from entity-id
         source: '/glossary/entity-:id.html',
+        destination: '/glossary/:id',
+        permanent: true,
+      },
+      {
+        // Truncate "entity" from entity-id
+        source: '/glossary/entity-:id',
         destination: '/glossary/:id',
         permanent: true,
       },
