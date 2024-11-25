@@ -40,6 +40,18 @@ const nextConfig = {
         permanent: true,
       },
       {
+        // PDFs
+        source: '/data/:slug.pdf',
+        destination: '/pdf-redirect/:slug.pdf',
+        permanent: true,
+      },
+      {
+        // epubs
+        source: '/data/:slug.epub',
+        destination: '/epub-redirect/:slug.pdf',
+        permanent: true,
+      },
+      {
         // Support legacy links with .html extension and ref-index parameter
         source: '/source/:id.html',
         has: [
@@ -83,6 +95,12 @@ const nextConfig = {
         destination: '/glossary-search',
         permanent: true,
       },
+      /*{
+        // Knowledgebase
+        source: '/knowledgebase/:path',
+        destination: '/knowledge-base-articles',
+        permanent: false,
+      },*/
     ];
   },
   async rewrites() {
@@ -98,12 +116,12 @@ const nextConfig = {
         destination: `${ searchHost }/search-tm-embedded.html`,
       },
       {
-        // /translation/toh1-1/UT22084-029-001/toh3808 -> /translation/toh1-1/toh3808/UT22084-001-001.html
+        // /translation/toh1-1/UT22084-029-001-chapter-1/toh3808 -> /translation/toh1-1/toh3808/UT22084-001-001-chapter-1.html
         source: '/translation/:work/:part/:commentary',
         destination: `${ staticHost }/translation/:work/commentary-:commentary/:part.html`,
       },
       {
-        // /translation/toh1-1/UT22084-001-001 -> /translation/toh1-1/UT22084-001-001.html
+        // /translation/toh1-1/UT22084-001-001-chapter-1 -> /translation/toh1-1/UT22084-001-001-chapter-1.html
         source: '/translation/:work/:part',
         destination: `${ staticHost }/translation/:work/:part.html`,
       },
