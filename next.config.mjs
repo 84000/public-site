@@ -106,6 +106,11 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+            // /translation/toh2-2/index/toh2-2 -> https://read.84000-translate.org/translation/toh1-1/index/toh2-2
+            "source": "/translation/:path*/index/:rest+",
+            "destination": "https://read.84000-translate.org/translation/:path*/index/:rest+"
+        },
+      {
         // /glossary-embedded/search.html -> /glossary-embedded/search.html
         source: '/glossary-embedded/:path*',
         destination: `${ searchHost }/glossary-embedded/:path*`,
