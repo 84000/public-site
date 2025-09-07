@@ -16,6 +16,13 @@ const nextConfig = {
         permanent: true,
       },
       {
+        // Catch parts that are milestones
+        // If there are only digits and dashes then drop the part
+        source: '/translation/:work/:part(UT[\-0-9]+$)',
+        destination: '/translation/:work',
+        permanent: true,
+      },
+      {
         // Resolve purls
         source: '/resource/core/WAE:id',
         destination: '/translation-redirect/WAE:id',
@@ -24,6 +31,12 @@ const nextConfig = {
       {
         // Support legacy links with .html extension
         source: '/translation/:id.html',
+        destination: '/translation/:id',
+        permanent: true,
+      },
+      {
+        // Support erroneous links with .htm extension
+        source: '/translation/:id.htm',
         destination: '/translation/:id',
         permanent: true,
       },
@@ -95,12 +108,6 @@ const nextConfig = {
         destination: '/glossary-search',
         permanent: true,
       },
-      /*{
-        // Knowledgebase
-        source: '/knowledgebase/:path',
-        destination: '/knowledge-base-articles',
-        permanent: false,
-      },*/
     ];
   },
   async rewrites() {
@@ -154,6 +161,10 @@ const nextConfig = {
         source: '/catalogue/:path*',
         destination: `${ staticHost }/catalogue/:path*`,
       },
+      /*{
+        source: '/knowledgebase/:path*',
+        destination: `${ siteHost }/knowledge-base-articles/?redirected=/knowledgebase/:path*`,
+      },*/
       {
         source: '/frontend/:path*',
         destination: `${ staticHost }/frontend/:path*`,
