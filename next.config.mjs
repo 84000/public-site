@@ -155,6 +155,7 @@ const SIMPLE_REWRITES = [
     '/source/:work/folio/:index',
     `${HOSTS.STATIC}/source/:work/folio-:index.html`, //gone -> redirect back to reading room path
   ],
+  ['/_next/:file', `${HOSTS.STATIC}/_next/:file`],
   ['/glossary/:id', `${HOSTS.STATIC}/glossary/named-entities/entity-:id.html`], // gone - redirect to scholar room
   ['/catalogue/:path*', `${HOSTS.STATIC}/catalogue/:path*`], //gone -> redirect back to reading room
   ['/frontend/:path*', `${HOSTS.STATIC}/frontend/:path*`], //gone -> redirect back to reading room
@@ -171,7 +172,7 @@ const SIMPLE_REWRITES = [
   ],
   ['/old/:path*', `${HOSTS.STATIC}/old-site/:path*/index.html`],
   [
-    '/:path((?!translation/|old|glossary/|source/|_next|public|assets|images|api|sitemap-0.xml).*)',
+    '/:path((?!translation/|old|glossary/|source/|public|assets|images|api|sitemap-0.xml).*)',
     `${HOSTS.SITE}/:path*${SEED_QUERY}`,
   ], // reading room 
 ];
