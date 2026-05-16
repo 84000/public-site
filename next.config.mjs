@@ -150,7 +150,7 @@ const SIMPLE_REWRITES = [
     '/translation/:work.:format',
     `${HOSTS.STATIC}/translation/:work/:work.:format`, //gone -> redirect back to base path
   ], // gone
-  ['/translation/:work', `${HOSTS.STATIC}/translation/:work/index.html`], //gone -> redirect back to base path
+  ['/translation/:work', `${HOSTS.STATIC}/translation/:work`], //gone -> redirect back to base path
   [
     '/source/:work/folio/:index',
     `${HOSTS.STATIC}/source/:work/folio-:index.html`, //gone -> redirect back to reading room path
