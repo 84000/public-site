@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const HOSTS = {
-  STATIC: 'https://static.84000.co', //update this reading room  
+  STATIC: 'https://reading-room.84000.co', //update this reading room  
   SEARCH: 'https://read.84000-translate.org', // remove
   SITE: 'https://brand.84000.co', // change to Brand
   READER: 'https://reader.84000.co', 
