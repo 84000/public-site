@@ -150,13 +150,13 @@ const SCHOLAR_KNOWLEDGEBASE_REDIRECTS = [
   ['/knowledgebase/EFT-KB-PURNA.html', `${HOSTS.SCHOLAR}/article/60d547d0-4400-4e8c-8e5e-7d6725d0de97`, true],
   ['/knowledgebase/EFT-KB-STUPA.html', `${HOSTS.SCHOLAR}/article/4c353d49-8e8e-4856-931c-83450af044fe`, true],
   ['/knowledgebase/thirteen-late-translated-sutras.html', `${HOSTS.SCHOLAR}/article/218c48c5-104e-446a-80ac-20e454bbdf1c`, true],
-  ['/knowledgebase/ornaments-buddhas.html', `${HOSTS.SCHOLAR}/canon/articles`, true],
+  ['/knowledgebase/ornaments-buddhas.html', `${HOSTS.SCHOLAR}/canon/article`, true],
   ['/knowledgebase/stupa.html', `${HOSTS.SCHOLAR}/article/4c353d49-8e8e-4856-931c-83450af044fe`, true],
   ['/knowledgebase/heap-jewels.html', `${HOSTS.SCHOLAR}/article/64b31ee3-3243-413c-b731-51c26ee744df`, true],
-  ['/knowledgebase/tarasripada.html', `${HOSTS.SCHOLAR}/canon/articles`, true],
-  ['/knowledgebase/vasudavajra.html', `${HOSTS.SCHOLAR}/canon/articles`, true],
-  ['/kb-articles/:path*', `${HOSTS.SCHOLAR}/articles/:path*`, true],
-  ['/knowledge-base-articles', `${HOSTS.SCHOLAR}/canon/articles`, true],
+  ['/knowledgebase/tarasripada.html', `${HOSTS.SCHOLAR}/canon/article`, true],
+  ['/knowledgebase/vasudavajra.html', `${HOSTS.SCHOLAR}/canon/article`, true],
+  ['/kb-articles/:path*', `${HOSTS.SCHOLAR}/article/:path*`, true],
+  ['/knowledge-base-articles', `${HOSTS.SCHOLAR}/canon/article`, true],
   ['/tools-for-translators', HOSTS.SCHOLAR, true],
 ];
 
@@ -207,7 +207,9 @@ const READING_ASSET_REWRITES = [
 
 /** @type {[string, string][]} */
 const READING_PAGE_REWRITES = [
+  ['/translation', `${HOSTS.READING}`],
   ['/translation/:path*', `${HOSTS.READING}/translation/:path*`],
+  ['/canon', `${HOSTS.READING}`],
   ['/canon/:path*', `${HOSTS.READING}/canon/:path*`],
   ['/curated-collection', `${HOSTS.READING}/curated-collection`],
   ['/curated-collection/:path*', `${HOSTS.READING}/curated-collection/:path*`],
@@ -219,7 +221,7 @@ const SITE_REWRITES = [
   ['/', HOSTS.SITE],
   ['/website-sitemap.xml', `${HOSTS.SITE}/sitemap.xml`],
   [
-    '/:path((?!translation/|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|_next/).*)',
+    '/:path((?!translation/|canon$|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|_next/).*)',
     `${HOSTS.SITE}/:path*${SEED_QUERY}`,
   ],
 ];
