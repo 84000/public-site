@@ -191,46 +191,14 @@ const redirectsConfig = [
 ];
 
 // ---------------------------------------------------------------
-// Rewrites
+// Rewrites (from Redirects rewrites.csv — reading-room only where listed)
 // ---------------------------------------------------------------
 
 /** @type {[string, string][]} */
-const TRANSLATION_REWRITES = [
-  [
-    '/translation/:path*/index/:rest+',
-    `${HOSTS.READING}/translation/:path*/index/:rest+`,
-  ],
-  [
-    '/translation/:work/:part/:commentary',
-    `${HOSTS.READING}/translation/:work/commentary-:commentary/:part.html`,
-  ],
-  ['/translation/:work/:part', `${HOSTS.READING}/translation/:work/:part.html`],
-  [
-    '/translation/:work.:format',
-    `${HOSTS.READING}/translation/:work/:work.:format`,
-  ],
-  ['/translation/:work', `${HOSTS.READING}/translation/:work`],
-  ['/translation/:path*', `${HOSTS.READING}/translation/:path*`],
-];
-
-/** @type {[string, string][]} */
-const SOURCE_REWRITES = [
-  [
-    '/source/:work/folio/:index',
-    `${HOSTS.READING}/source/:work/folio-:index.html`,
-  ],
-];
-
-/** @type {[string, string][]} */
-const GLOSSARY_REWRITES = [
-  ['/glossary-embedded/:path*', `${HOSTS.SCHOLAR}/glossary-embedded/:path*`],
-  ['/search-tm-embedded.html', `${HOSTS.SCHOLAR}/search-tm-embedded.html`],
-  ['/glossary/:id', `${HOSTS.SCHOLAR}/glossary/named-entities/entity-:id.html`],
-];
-
-/** @type {[string, string][]} */
-const STATIC_ASSET_REWRITES = [
-  ['/_next/:file', `${HOSTS.READING}/_next/:file`],
+const READING_ASSET_REWRITES = [
+  ['/_next/static/:path*', `${HOSTS.READING}/_next/static/:path*`],
+  ['/_next/image', `${HOSTS.READING}/_next/image`],
+  ['/_next/:path*', `${HOSTS.READING}/_next/:path*`],
   ['/catalogue/:path*', `${HOSTS.READING}/catalogue/:path*`],
   ['/frontend/:path*', `${HOSTS.READING}/frontend/:path*`],
   ['/images/:path*', `${HOSTS.READING}/images/:path*`],
@@ -238,24 +206,8 @@ const STATIC_ASSET_REWRITES = [
 ];
 
 /** @type {[string, string][]} */
-const SITEMAP_REWRITES = [
-  ['/website-sitemap.xml', `${HOSTS.SITE}/sitemap.xml`],
-  ['/translation-sitemap.xml', `${HOSTS.READING}/translation/sitemap.xml`],
-  ['/source-sitemap.xml', `${HOSTS.READING}/source/sitemap.xml`],
-  [
-    '/glossary-sitemap.xml',
-    `${HOSTS.READING}/glossary/named-entities/sitemap.xml`,
-  ],
-];
-
-/** @type {[string, string][]} */
-const WELL_KNOWN_REWRITES = [
-  ['/.well-known/:file.json', `${HOSTS.READING}/mobile-app/:file.json`],
-  ['/.well-known/:file', `${HOSTS.READING}/mobile-app/:file.json`],
-];
-
-/** @type {[string, string][]} */
-const READING_ROOM_REWRITES = [
+const READING_PAGE_REWRITES = [
+  ['/translation/:path*', `${HOSTS.READING}/translation/:path*`],
   ['/canon/:path*', `${HOSTS.READING}/canon/:path*`],
   ['/curated-collection', `${HOSTS.READING}/curated-collection`],
   ['/curated-collection/:path*', `${HOSTS.READING}/curated-collection/:path*`],
@@ -263,32 +215,27 @@ const READING_ROOM_REWRITES = [
 ];
 
 /** @type {[string, string][]} */
-const LEGACY_OLD_SITE_REWRITES = [
-  ['/old/:path*', `${HOSTS.READING}/old-site/:path*/index.html`],
-];
-
-/** @type {[string, string][]} */
-const CATCH_ALL_REWRITES = [
+const SITE_REWRITES = [
+  ['/', HOSTS.SITE],
+  ['/website-sitemap.xml', `${HOSTS.SITE}/sitemap.xml`],
   [
-    '/:path((?!translation/|old|glossary/|source/|public|assets|images|api|sitemap-0.xml|reading-room|curated-collection|canon/).*)',
-    `${HOSTS.READING}/:path*${SEED_QUERY}`,
+    '/:path((?!translation/|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|_next/).*)',
+    `${HOSTS.SITE}/:path*${SEED_QUERY}`,
   ],
 ];
 
 const COMPLEX_REWRITES = [];
 
-const rewritesConfig = [
-  ...toRewrites(TRANSLATION_REWRITES),
-  ...toRewrites(SOURCE_REWRITES),
-  ...toRewrites(GLOSSARY_REWRITES),
-  ...toRewrites(STATIC_ASSET_REWRITES),
-  ...toRewrites(SITEMAP_REWRITES),
-  ...toRewrites(WELL_KNOWN_REWRITES),
-  ...toRewrites(READING_ROOM_REWRITES),
-  ...toRewrites(LEGACY_OLD_SITE_REWRITES),
-  ...toRewrites(CATCH_ALL_REWRITES),
-  ...COMPLEX_REWRITES,
-];
+// Order: reading-room assets → reading-room pages → brand (default).
+// beforeFiles runs before the local /_next handler (required for proxied pages).
+const rewritesConfig = {
+  beforeFiles: [
+    ...toRewrites(READING_ASSET_REWRITES),
+    ...toRewrites(READING_PAGE_REWRITES),
+    ...toRewrites(SITE_REWRITES),
+    ...COMPLEX_REWRITES,
+  ],
+};
 
 // ---------------------------------------------------------------
 
