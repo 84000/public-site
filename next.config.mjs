@@ -220,9 +220,9 @@ const READING_PAGE_REWRITES = [
 /** @type {[string, string][]} */
 const SITE_REWRITES = [
   ['/', HOSTS.SITE],
-  ['/website-sitemap.xml', `${HOSTS.SITE}/sitemap.xml`],
+  ['/website-sitemap.xml', '/sitemap/brand'],
   [
-    '/:path((?!translation/|canon$|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|_next/).*)',
+    '/:path((?!translation/|canon$|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|sitemap/|_next/).*)',
     `${HOSTS.SITE}/:path*${SEED_QUERY}`,
   ],
 ];
