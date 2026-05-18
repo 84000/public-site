@@ -45,9 +45,10 @@ const ASSET_REDIRECTS = [
 
 /** @type {[string, string, boolean?][]} */
 const GLOSSARY_REDIRECTS = [
-  ['/glossary/entity-:id.html', '/glossary/:id', true],
-  ['/glossary/entity-:id', '/glossary/:id', true],
+  ['/glossary/entity-:id.html', `${HOSTS.SCHOLAR}/authority/:id`, true],
+  ['/glossary/entity-:id', `${HOSTS.SCHOLAR}/authority/:id`, true],
   ['/glossary/search.html', `${HOSTS.SCHOLAR}/glossary`, true],
+  ['/glossary/:path+.html', '/glossary/:path+', true],
   ['/glossary/:path*', `${HOSTS.SCHOLAR}/authority/:path*`, true],
   ['/glossary-search', `${HOSTS.SCHOLAR}/glossary`, true],
 ];
