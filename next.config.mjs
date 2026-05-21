@@ -219,7 +219,7 @@ const READING_PAGE_REWRITES = [
 
 /** @type {[string, string][]} */
 const SITE_REWRITES = [
-  ['/', HOSTS.SITE],
+  ['/reading-room/:path*', `${HOSTS.READING}/:path*`],
   ['/sitemap.xml', '/sitemap/brand'],
   ['/website-sitemap.xml', '/sitemap/brand'],
   [
