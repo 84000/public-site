@@ -164,6 +164,7 @@ const SCHOLAR_KNOWLEDGEBASE_REDIRECTS = [
 /** @type {[string, string, boolean?][]} */
 const SITE_PATH_REDIRECTS = [
   ['/canon-sections/:path*', '/canon/:path*', true],
+  ['/translation/:tohid/UT:id', `/translation/:tohid#UT:id`, true],
   ['/popular-themes/:path*', '/curated-collection/:path*', true],
   ['/popular-themes', '/curated-collection', true],
   ['/all-publications', '/reading-room', true],
