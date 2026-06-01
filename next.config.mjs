@@ -216,6 +216,7 @@ const READING_PAGE_REWRITES = [
   ['/curated-collection', `${HOSTS.READING}/curated-collection`],
   ['/curated-collection/:path*', `${HOSTS.READING}/curated-collection/:path*`],
   ['/reading-room', HOSTS.READING],
+  ['/entity/:type/:slug', `${HOSTS.READING}/translation/entity/:type/:slug`],
 ];
 
 /** @type {[string, string][]} */
