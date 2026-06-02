@@ -29,7 +29,11 @@ const toRewrites = (tuples) =>
 const TRANSLATION_REDIRECTS = [
   ['/translation/UT:id', '/translation-redirect/UT:id', true],
   ['/resource/core/WAE:id', '/translation-redirect/WAE:id', true],
-  ['/translation/:id.html', '/translation/:id', true],
+  // Strip .html — use named regex capture so :path doesn't swallow the extension.
+  // NOTE: uppercase Toh redirects were removed — path-to-regexp matches case-
+  // insensitively at runtime in Next.js 14.2.4, so `Toh:id` ALSO matched
+  // `/translation/toh*` and looped. Handle uppercase Toh at the CMS/source layer.
+  ['/translation/:path(.*)\\.html', '/translation/:path', true],
 ];
 
 /** @type {[string, string, boolean?][]} */
@@ -42,14 +46,22 @@ const SOURCE_REDIRECTS = [
 const ASSET_REDIRECTS = [
   ['/data/:slug.pdf', '/pdf-redirect/:slug.pdf', true],
   ['/data/:slug.epub', '/epub-redirect/:slug.epub', true],
+  // NOTE: /translation/{toh}.pdf is not redirected here. It is the canonical PDF
+  // URL — the middleware (src/middleware.js) already redirects /pdf-redirect/*
+  // back to /translation/{toh}.pdf, so adding a redirect from /translation/*.pdf
+  // would create an infinite loop. If reading-room.84000.co doesn't serve PDFs
+  // at this path, route the request via a rewrite (not a redirect).
 ];
 
 /** @type {[string, string, boolean?][]} */
 const GLOSSARY_REDIRECTS = [
-  ['/glossary/entity-:id.html', `${HOSTS.SCHOLAR}/authority/:id`, true],
+  // Use named regex capture so :id doesn't swallow .html
+  ['/glossary/entity-:id(\\d+)\\.html', `${HOSTS.SCHOLAR}/authority/:id`, true],
   ['/glossary/entity-:id', `${HOSTS.SCHOLAR}/authority/:id`, true],
   ['/glossary/search.html', `${HOSTS.SCHOLAR}/glossary`, true],
-  ['/glossary/:path+.html', '/glossary/:path+', true],
+  // Bare numeric IDs (e.g. /glossary/2581) — must come before catch-all
+  ['/glossary/:id(\\d+)', `${HOSTS.SCHOLAR}/authority/entity-:id`, true],
+  ['/glossary/:path(.*)\\.html', '/glossary/:path', true],
   ['/glossary/:path*', `${HOSTS.SCHOLAR}/authority/:path*`, true],
   ['/glossary-search', `${HOSTS.SCHOLAR}/glossary`, true],
 ];
@@ -165,7 +177,9 @@ const SCHOLAR_KNOWLEDGEBASE_REDIRECTS = [
 /** @type {[string, string, boolean?][]} */
 const SITE_PATH_REDIRECTS = [
   ['/canon-sections/:path*', '/canon/:path*', true],
-  ['/translation/:tohid/UT:id', `/translation/:tohid#UT:id`, true],
+  // Was: redirect to /translation/:tohid#UT:id (fragment URLs are invisible to Googlebot).
+  // Now: redirect to the bare translation page so Googlebot can crawl it.
+  ['/translation/:tohid/UT:id', '/translation/:tohid', true],
   ['/popular-themes/:path*', '/curated-collection/:path*', true],
   ['/popular-themes', '/curated-collection', true],
   ['/all-publications', '/reading-room', true],
@@ -179,6 +193,13 @@ const SITE_PATH_REDIRECTS = [
   ],
 ];
 
+// NOTE: Two has-based redirects were tested and removed because Next.js 14.2.4
+// does not substitute named capture groups from `has` conditions into the
+// destination path (`:part` stayed unresolved, producing self-redirect loops):
+//   1) /translation/:toh?part=X → /translation/:toh/X     (~73 GSC URLs)
+//   2) Strip ".Copy" suffix from ?part= query             (~38 GSC URLs)
+// Both need to be handled in middleware (src/middleware.js) instead, where the
+// query param can be parsed and rewritten manually.
 const COMPLEX_REDIRECTS = [];
 
 const redirectsConfig = [
@@ -248,6 +269,7 @@ const rewritesConfig = {
 
 const nextConfig = {
   reactStrictMode: true,
+  trailingSlash: false,
   async redirects() {
     return redirectsConfig;
   },
