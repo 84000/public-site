@@ -4,6 +4,7 @@ const HOSTS = {
   READING: 'https://reading-room.84000.co',
   SCHOLAR: 'https://scholar.84000.co',
   SITE: 'https://brand.84000.co',
+  SOURCE: 'https://source.84000.co',
 };
 
 const SEED_QUERY = '?seed=true';
@@ -33,8 +34,8 @@ const TRANSLATION_REDIRECTS = [
 
 /** @type {[string, string, boolean?][]} */
 const SOURCE_REDIRECTS = [
-  ['/source/UT:id', '/source-redirect/UT:id', true],
-  ['/source/UT:id/folio/:index', '/source-redirect/UT:id/folio/:index', true],
+  // All /source/* paths redirect to source.84000.co
+  ['/source/:path*', `${HOSTS.SOURCE}/:path*`, true],
 ];
 
 /** @type {[string, string, boolean?][]} */
