@@ -59,6 +59,9 @@ const GLOSSARY_REDIRECTS = [
   ['/glossary/entity-:id(\\d+)\\.html', `${HOSTS.SCHOLAR}/authority/:id`, true],
   ['/glossary/entity-:id', `${HOSTS.SCHOLAR}/authority/:id`, true],
   ['/glossary/search.html', `${HOSTS.SCHOLAR}/glossary`, true],
+  // Legacy embedded glossary route
+  ['/glossary-embedded/search.html', `${HOSTS.SCHOLAR}/glossary`, true],
+  ['/glossary-embedded/:path*', `${HOSTS.SCHOLAR}/glossary`, true],
   // Bare numeric IDs (e.g. /glossary/2581) — must come before catch-all
   ['/glossary/:id(\\d+)', `${HOSTS.SCHOLAR}/authority/entity-:id`, true],
   ['/glossary/:path(.*)\\.html', '/glossary/:path', true],
@@ -186,11 +189,34 @@ const SITE_PATH_REDIRECTS = [
   ['/all-publications-search', '/reading-room', true],
   ['/latest-publications', '/reading-room', true],
   ['/collection/:path*', '/reading-room', true],
+  // WordPress-era category URLs (e.g. /category/announcements/publication/page/5)
+  ['/category/:path*', '/reading-room', true],
+  // Bare new-publication slugs (e.g. /new-publication-foo) → post listing
+  ['/new-publication-:slug', '/post/:slug', true],
   [
     '/introduction-to-kangyur-and-tengyur',
     '/post/a-brief-introduction-to-the-kangyur-and-tengyur',
     true,
   ],
+];
+
+/** @type {[string, string, boolean?][]} */
+const BROKEN_PROTOCOL_REDIRECTS = [
+  // CMS bug: hrefs constructed as `${basePath}${fullUrl}` produce URLs like
+  // /post/://84000.co/post/foo. Next.js normalizes duplicate slashes BEFORE
+  // route matching (308 → /post/:/84000.co/...) so we match the normalized
+  // single-slash form here. Long-term fix is in the CMS template that builds
+  // these hrefs.
+  ['/:prefix(.*)/:colon(\\:)/84000.co/:realpath*', '/:realpath*', true],
+];
+
+/** @type {[string, string, boolean?][]} */
+const STRIP_TRAILING_REDIRECTS = [
+  // /translation/{toh}/{ut-part}/toh{X} — strip the trailing toh segment.
+  // Cause unknown (possibly a "related text" link incorrectly built as a path
+  // segment). Constrained to trailing segments that start with "toh" so we
+  // don't strip legitimate 3-segment translation URLs. Temporary 302.
+  ['/translation/:toh/:ut/:trailing(toh[A-Za-z0-9\\-]+)', '/translation/:toh/:ut', false],
 ];
 
 // NOTE: Two has-based redirects were tested and removed because Next.js 14.2.4
@@ -211,6 +237,8 @@ const redirectsConfig = [
   ...toRedirects(LEGACY_CANON_REDIRECTS),
   ...toRedirects(SCHOLAR_KNOWLEDGEBASE_REDIRECTS),
   ...toRedirects(SITE_PATH_REDIRECTS),
+  ...toRedirects(STRIP_TRAILING_REDIRECTS),
+  ...toRedirects(BROKEN_PROTOCOL_REDIRECTS),
   ...COMPLEX_REDIRECTS,
 ];
 
