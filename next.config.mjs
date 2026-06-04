@@ -275,16 +275,16 @@ const SITE_REWRITES = [
   ['/sitemap.xml', '/sitemap/brand'],
   ['/website-sitemap.xml', '/sitemap/brand'],
   [
-    '/:path((?!translation/|canon$|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|sitemap.xml|sitemap/|_next/).*)',
+    '/:path((?!translation/|canon$|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|sitemap.xml|sitemap/|_next/|\\.well-known/).*)',
     `${HOSTS.SITE}/:path*${SEED_QUERY}`,
   ],
 ];
 
 const COMPLEX_REWRITES = [
-  // Digital Asset Links for Android app verification
+  // All .well-known paths → reading-room.84000.co
   {
-    source: '/.well-known/assetlinks.json',
-    destination: 'https://reading-room.84000.co/.well-known/assetlinks.json',
+    source: '/.well-known/:path*',
+    destination: 'https://reading-room.84000.co/.well-known/:path*',
   },
 ];
 
