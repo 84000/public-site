@@ -29,7 +29,11 @@ const toRewrites = (tuples) =>
 const TRANSLATION_REDIRECTS = [
   ['/translation/UT:id', '/translation-redirect/UT:id', true],
   ['/resource/core/WAE:id', '/translation-redirect/WAE:id', true],
-  ['/translation/:id.html', '/translation/:id', true],
+  // Strip .html — use named regex capture so :path doesn't swallow the extension.
+  // NOTE: uppercase Toh redirects were removed — path-to-regexp matches case-
+  // insensitively at runtime in Next.js 14.2.4, so `Toh:id` ALSO matched
+  // `/translation/toh*` and looped. Handle uppercase Toh at the CMS/source layer.
+  ['/translation/:path(.*)\\.html', '/translation/:path', true],
 ];
 
 /** @type {[string, string, boolean?][]} */
@@ -42,14 +46,25 @@ const SOURCE_REDIRECTS = [
 const ASSET_REDIRECTS = [
   ['/data/:slug.pdf', '/pdf-redirect/:slug.pdf', true],
   ['/data/:slug.epub', '/epub-redirect/:slug.epub', true],
+  // NOTE: /translation/{toh}.pdf is not redirected here. It is the canonical PDF
+  // URL — the middleware (src/middleware.js) already redirects /pdf-redirect/*
+  // back to /translation/{toh}.pdf, so adding a redirect from /translation/*.pdf
+  // would create an infinite loop. If reading-room.84000.co doesn't serve PDFs
+  // at this path, route the request via a rewrite (not a redirect).
 ];
 
 /** @type {[string, string, boolean?][]} */
 const GLOSSARY_REDIRECTS = [
-  ['/glossary/entity-:id.html', `${HOSTS.SCHOLAR}/authority/:id`, true],
+  // Use named regex capture so :id doesn't swallow .html
+  ['/glossary/entity-:id(\\d+)\\.html', `${HOSTS.SCHOLAR}/authority/:id`, true],
   ['/glossary/entity-:id', `${HOSTS.SCHOLAR}/authority/:id`, true],
   ['/glossary/search.html', `${HOSTS.SCHOLAR}/glossary`, true],
-  ['/glossary/:path+.html', '/glossary/:path+', true],
+  // Legacy embedded glossary route
+  ['/glossary-embedded/search.html', `${HOSTS.SCHOLAR}/glossary`, true],
+  ['/glossary-embedded/:path*', `${HOSTS.SCHOLAR}/glossary`, true],
+  // Bare numeric IDs (e.g. /glossary/2581) — must come before catch-all
+  ['/glossary/:id(\\d+)', `${HOSTS.SCHOLAR}/authority/entity-:id`, true],
+  ['/glossary/:path(.*)\\.html', '/glossary/:path', true],
   ['/glossary/:path*', `${HOSTS.SCHOLAR}/authority/:path*`, true],
   ['/glossary-search', `${HOSTS.SCHOLAR}/glossary`, true],
 ];
@@ -165,13 +180,19 @@ const SCHOLAR_KNOWLEDGEBASE_REDIRECTS = [
 /** @type {[string, string, boolean?][]} */
 const SITE_PATH_REDIRECTS = [
   ['/canon-sections/:path*', '/canon/:path*', true],
-  ['/translation/:tohid/UT:id', `/translation/:tohid#UT:id`, true],
+  // Was: redirect to /translation/:tohid#UT:id (fragment URLs are invisible to Googlebot).
+  // Now: redirect to the bare translation page so Googlebot can crawl it.
+  ['/translation/:tohid/UT:id', '/translation/:tohid', true],
   ['/popular-themes/:path*', '/curated-collection/:path*', true],
   ['/popular-themes', '/curated-collection', true],
   ['/all-publications', '/reading-room', true],
   ['/all-publications-search', '/reading-room', true],
   ['/latest-publications', '/reading-room', true],
   ['/collection/:path*', '/reading-room', true],
+  // WordPress-era category URLs (e.g. /category/announcements/publication/page/5)
+  ['/category/:path*', '/reading-room', true],
+  // Bare new-publication slugs (e.g. /new-publication-foo) → post listing
+  ['/new-publication-:slug', '/post/:slug', true],
   [
     '/introduction-to-kangyur-and-tengyur',
     '/post/a-brief-introduction-to-the-kangyur-and-tengyur',
@@ -179,6 +200,32 @@ const SITE_PATH_REDIRECTS = [
   ],
 ];
 
+/** @type {[string, string, boolean?][]} */
+const BROKEN_PROTOCOL_REDIRECTS = [
+  // CMS bug: hrefs constructed as `${basePath}${fullUrl}` produce URLs like
+  // /post/://84000.co/post/foo. Next.js normalizes duplicate slashes BEFORE
+  // route matching (308 → /post/:/84000.co/...) so we match the normalized
+  // single-slash form here. Long-term fix is in the CMS template that builds
+  // these hrefs.
+  ['/:prefix(.*)/:colon(\\:)/84000.co/:realpath*', '/:realpath*', true],
+];
+
+/** @type {[string, string, boolean?][]} */
+const STRIP_TRAILING_REDIRECTS = [
+  // /translation/{toh}/{ut-part}/toh{X} — strip the trailing toh segment.
+  // Cause unknown (possibly a "related text" link incorrectly built as a path
+  // segment). Constrained to trailing segments that start with "toh" so we
+  // don't strip legitimate 3-segment translation URLs. Temporary 302.
+  ['/translation/:toh/:ut/:trailing(toh[A-Za-z0-9\\-]+)', '/translation/:toh/:ut', false],
+];
+
+// NOTE: Two has-based redirects were tested and removed because Next.js 14.2.4
+// does not substitute named capture groups from `has` conditions into the
+// destination path (`:part` stayed unresolved, producing self-redirect loops):
+//   1) /translation/:toh?part=X → /translation/:toh/X     (~73 GSC URLs)
+//   2) Strip ".Copy" suffix from ?part= query             (~38 GSC URLs)
+// Both need to be handled in middleware (src/middleware.js) instead, where the
+// query param can be parsed and rewritten manually.
 const COMPLEX_REDIRECTS = [];
 
 const redirectsConfig = [
@@ -190,6 +237,8 @@ const redirectsConfig = [
   ...toRedirects(LEGACY_CANON_REDIRECTS),
   ...toRedirects(SCHOLAR_KNOWLEDGEBASE_REDIRECTS),
   ...toRedirects(SITE_PATH_REDIRECTS),
+  ...toRedirects(STRIP_TRAILING_REDIRECTS),
+  ...toRedirects(BROKEN_PROTOCOL_REDIRECTS),
   ...COMPLEX_REDIRECTS,
 ];
 
@@ -226,21 +275,27 @@ const SITE_REWRITES = [
   ['/sitemap.xml', '/sitemap/brand'],
   ['/website-sitemap.xml', '/sitemap/brand'],
   [
-    '/:path((?!translation/|canon$|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|sitemap.xml|sitemap/|_next/).*)',
+    '/:path((?!translation/|canon$|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|sitemap.xml|sitemap/|_next/|\\.well-known/).*)',
     `${HOSTS.SITE}/:path*${SEED_QUERY}`,
   ],
 ];
 
-const COMPLEX_REWRITES = [];
+const COMPLEX_REWRITES = [
+  // All .well-known paths → reading-room.84000.co
+  {
+    source: '/.well-known/:path*',
+    destination: 'https://reading-room.84000.co/.well-known/:path*',
+  },
+];
 
-// Order: reading-room assets → reading-room pages → brand (default).
+// Order: reading-room assets → reading-room pages → service config → brand (default).
 // beforeFiles runs before the local /_next handler (required for proxied pages).
 const rewritesConfig = {
   beforeFiles: [
     ...toRewrites(READING_ASSET_REWRITES),
     ...toRewrites(READING_PAGE_REWRITES),
-    ...toRewrites(SITE_REWRITES),
     ...COMPLEX_REWRITES,
+    ...toRewrites(SITE_REWRITES),
   ],
 };
 
@@ -248,6 +303,7 @@ const rewritesConfig = {
 
 const nextConfig = {
   reactStrictMode: true,
+  trailingSlash: false,
   async redirects() {
     return redirectsConfig;
   },
