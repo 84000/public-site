@@ -280,16 +280,22 @@ const SITE_REWRITES = [
   ],
 ];
 
-const COMPLEX_REWRITES = [];
+const COMPLEX_REWRITES = [
+  // Digital Asset Links for Android app verification
+  {
+    source: '/.well-known/assetlinks.json',
+    destination: 'https://reading-room.84000.co/.well-known/assetlinks.json',
+  },
+];
 
-// Order: reading-room assets → reading-room pages → brand (default).
+// Order: reading-room assets → reading-room pages → service config → brand (default).
 // beforeFiles runs before the local /_next handler (required for proxied pages).
 const rewritesConfig = {
   beforeFiles: [
     ...toRewrites(READING_ASSET_REWRITES),
     ...toRewrites(READING_PAGE_REWRITES),
-    ...toRewrites(SITE_REWRITES),
     ...COMPLEX_REWRITES,
+    ...toRewrites(SITE_REWRITES),
   ],
 };
 
