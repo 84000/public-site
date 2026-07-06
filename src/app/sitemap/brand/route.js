@@ -1,8 +1,11 @@
+import { PROXY_USER_AGENT } from '../../../lib/proxy-request';
+
 const BRAND_SITEMAP_URL = 'https://brand.84000.co/sitemap.xml';
 const REVALIDATE_SECONDS = 3600;
 
 export async function GET() {
   const res = await fetch(BRAND_SITEMAP_URL, {
+    headers: { 'user-agent': PROXY_USER_AGENT },
     next: { revalidate: REVALIDATE_SECONDS },
   });
 

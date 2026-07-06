@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server'
-import { notFound } from 'next/navigation'
 // TO DO: import these from static repo
 import workIds from './public/work-ids.json'
+import { isProxiedPath, PROXY_USER_AGENT } from './lib/proxy-request'
 
-export function middleware(request) {
+function withProxyUserAgent(request) {
+  const headers = new Headers(request.headers)
+  headers.set('user-agent', PROXY_USER_AGENT)
+  return NextResponse.next({ request: { headers } })
+}
 
+function handleAssetRedirect(request) {
   const utId = /(UT[a-zA-Z0-9\-]+)/i.exec(request.nextUrl.pathname);
   const tohId = /(TOH[a-zA-Z0-9\-]+)/i.exec(request.nextUrl.pathname);
   
@@ -53,9 +58,41 @@ export function middleware(request) {
 
   // Translation HTML page
   return NextResponse.redirect(new URL('/translation/'+ workId.destination, request.url));
+}
 
+export function middleware(request) {
+  const { pathname } = request.nextUrl
+
+  if (/^\/(translation|source|pdf|epub)-redirect\//i.test(pathname)) {
+    return handleAssetRedirect(request)
+  }
+
+  if (isProxiedPath(pathname)) {
+    return withProxyUserAgent(request)
+  }
 }
 
 export const config = {
-  matcher: ['/translation-redirect/:path*', '/source-redirect/:path*', '/pdf-redirect/:path*', '/epub-redirect/:path*'],
+  matcher: [
+    '/translation-redirect/:path*',
+    '/source-redirect/:path*',
+    '/pdf-redirect/:path*',
+    '/epub-redirect/:path*',
+    '/_next/:path*',
+    '/catalogue/:path*',
+    '/frontend/:path*',
+    '/images/:path*',
+    '/audio/:path*',
+    '/translation',
+    '/translation/:path*',
+    '/canon',
+    '/canon/:path*',
+    '/curated-collection',
+    '/curated-collection/:path*',
+    '/reading-room',
+    '/reading-room/:path*',
+    '/entity/:type/:slug',
+    '/.well-known/:path*',
+    '/:path((?!translation/|canon$|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|sitemap.xml|sitemap/|_next/|\\.well-known/|translation-redirect/|source-redirect/|pdf-redirect/|epub-redirect/|source/).*)',
+  ],
 }
