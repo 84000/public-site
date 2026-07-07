@@ -34,6 +34,10 @@ const TRANSLATION_REDIRECTS = [
   // insensitively at runtime in Next.js 14.2.4, so `Toh:id` ALSO matched
   // `/translation/toh*` and looped. Handle uppercase Toh at the CMS/source layer.
   ['/translation/:path(.*)\\.html', '/translation/:path', true],
+  // Same as above, but for URLs with a stray trailing dot after .html —
+  // e.g. /translation/toh728.html. (likely a copy-paste/citation artifact in
+  // whatever originally linked it). \\.+ matches one or more trailing dots.
+  ['/translation/:path(.*)\\.html\\.+', '/translation/:path', true],
 ];
 
 /** @type {[string, string, boolean?][]} */
