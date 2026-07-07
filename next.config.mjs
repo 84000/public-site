@@ -46,6 +46,12 @@ const SOURCE_REDIRECTS = [
 const ASSET_REDIRECTS = [
   ['/data/:slug.pdf', '/pdf-redirect/:slug.pdf', true],
   ['/data/:slug.epub', '/epub-redirect/:slug.epub', true],
+  // Legacy chapter-browser download links, e.g.
+  // /browser/released/UT22084/046/UT22084-046-001.pdf
+  // Always two directory levels (volume, chapter) in front of the filename —
+  // :vol/:chap are captured only to be discarded; :slug is the full filename
+  // minus extension and feeds the same /pdf-redirect/* pipeline as /data/*.pdf.
+  ['/browser/released/:vol/:chap/:slug(.*)\\.pdf', '/pdf-redirect/:slug.pdf', true],
   // NOTE: /translation/{toh}.pdf is not redirected here. It is the canonical PDF
   // URL — the middleware (src/middleware.js) already redirects /pdf-redirect/*
   // back to /translation/{toh}.pdf, so adding a redirect from /translation/*.pdf
