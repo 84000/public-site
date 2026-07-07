@@ -26,18 +26,21 @@ const toRewrites = (tuples) =>
 // ---------------------------------------------------------------
 
 /** @type {[string, string, boolean?][]} */
+/** @type {[string, string, boolean?][]} */
 const TRANSLATION_REDIRECTS = [
   ['/translation/UT:id', '/translation-redirect/UT:id', true],
   ['/resource/core/WAE:id', '/translation-redirect/WAE:id', true],
-  // Strip .html — use named regex capture so :path doesn't swallow the extension.
+  // Strip .html, with an optional stray trailing dot (or dots) — e.g.
+  // /translation/toh728.html. — likely a copy-paste/citation artifact in
+  // whatever originally linked it. :trail is never used in the destination;
+  // it exists purely to consume the trailing dot(s) so the match succeeds.
+  // \.* (zero-or-more) means this one rule covers both toh728.html and
+  // toh728.html. — no separate rule needed for the dot case.
+  //
   // NOTE: uppercase Toh redirects were removed — path-to-regexp matches case-
   // insensitively at runtime in Next.js 14.2.4, so `Toh:id` ALSO matched
   // `/translation/toh*` and looped. Handle uppercase Toh at the CMS/source layer.
-  ['/translation/:path(.*)\\.html', '/translation/:path', true],
-  // Same as above, but for URLs with a stray trailing dot after .html —
-  // e.g. /translation/toh728.html. (likely a copy-paste/citation artifact in
-  // whatever originally linked it). \\.+ matches one or more trailing dots.
-  ['/translation/:path(.*)\\.html\\.+', '/translation/:path', true],
+  ['/translation/:path(.*)\\.html:trail(\\.*)', '/translation/:path', true],
 ];
 
 /** @type {[string, string, boolean?][]} */
