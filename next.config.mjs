@@ -50,6 +50,7 @@ const SOURCE_REDIRECTS = [
 ];
 
 /** @type {[string, string, boolean?][]} */
+/** @type {[string, string, boolean?][]} */
 const ASSET_REDIRECTS = [
   ['/data/:slug.pdf', '/pdf-redirect/:slug.pdf', true],
   ['/data/:slug.epub', '/epub-redirect/:slug.epub', true],
@@ -59,6 +60,10 @@ const ASSET_REDIRECTS = [
   // :vol/:chap are captured only to be discarded; :slug is the full filename
   // minus extension and feeds the same /pdf-redirect/* pipeline as /data/*.pdf.
   ['/browser/released/:vol/:chap/:slug(.*)\\.pdf', '/pdf-redirect/:slug.pdf', true],
+  // Alt legacy path with an extra "pdf" directory segment, e.g.
+  // /data/pdf/UT22084-081-006.pdf — same UT filenames as /data/:slug.pdf above,
+  // just nested one level deeper. :dir is captured only to be discarded.
+  ['/data/:dir/:slug.pdf', '/pdf-redirect/:slug.pdf', true],
   // NOTE: /translation/{toh}.pdf is not redirected here. It is the canonical PDF
   // URL — the middleware (src/middleware.js) already redirects /pdf-redirect/*
   // back to /translation/{toh}.pdf, so adding a redirect from /translation/*.pdf
