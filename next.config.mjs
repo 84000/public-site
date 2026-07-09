@@ -295,7 +295,7 @@ const SITE_REWRITES = [
   ['/sitemap.xml', '/sitemap/brand'],
   ['/website-sitemap.xml', '/sitemap/brand'],
   [
-    '/:path((?!translation/|canon$|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|sitemap.xml|sitemap/|_next/|\\.well-known/).*)',
+    '/:path((?!translation/|canon$|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|sitemap.xml|sitemap/|_next/|_vercel/|\\.well-known/).*)',
     `${HOSTS.SITE}/:path*${SEED_QUERY}`,
   ],
 ];
