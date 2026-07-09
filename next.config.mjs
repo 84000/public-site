@@ -190,6 +190,8 @@ const SCHOLAR_KNOWLEDGEBASE_REDIRECTS = [
   ['/knowledgebase/heap-jewels.html', `${HOSTS.SCHOLAR}/article/64b31ee3-3243-413c-b731-51c26ee744df`, true],
   ['/knowledgebase/tarasripada.html', `${HOSTS.SCHOLAR}/canon/article`, true],
   ['/knowledgebase/vasudavajra.html', `${HOSTS.SCHOLAR}/canon/article`, true],
+  ['/knowledgebase/amoghanatha.html', `${HOSTS.SCHOLAR}/canon/article`, true],
+  ['/knowledgebase/asokasri.html', `${HOSTS.SCHOLAR}/canon/article`, true],
   ['/kb-articles/:path*', `${HOSTS.SCHOLAR}/article/:path*`, true],
   ['/knowledge-base-articles', `${HOSTS.SCHOLAR}/canon/article`, true],
   ['/tools-for-translators', HOSTS.SCHOLAR, true],
