@@ -221,6 +221,18 @@ const SITE_PATH_REDIRECTS = [
 ];
 
 /** @type {[string, string, boolean?][]} */
+// Reading-room breadcrumb bug: the parent-work breadcrumb link is built from a
+// slugified display title instead of the work's actual canon slug, so it points
+// at a canon page that doesn't exist and renders a 404. Redirect the
+// title-derived slug to the real canon page. Temporary (302) so it isn't cached
+// permanently once the reading-room breadcrumb template is fixed.
+//   Reported: Toh 44 "The Sūtra, "A Multitude of the Buddhas"" (toh44-31)
+//   the-sutra-a-multitude-of-the-buddhas → a-multitude-of-buddhas
+const CANON_BREADCRUMB_REDIRECTS = [
+  ['/canon/the-sutra-a-multitude-of-the-buddhas', '/canon/a-multitude-of-buddhas', false],
+];
+
+/** @type {[string, string, boolean?][]} */
 const BROKEN_PROTOCOL_REDIRECTS = [
   // CMS bug: hrefs constructed as `${basePath}${fullUrl}` produce URLs like
   // /post/://84000.co/post/foo. Next.js normalizes duplicate slashes BEFORE
@@ -257,6 +269,7 @@ const redirectsConfig = [
   ...toRedirects(LEGACY_CANON_REDIRECTS),
   ...toRedirects(SCHOLAR_KNOWLEDGEBASE_REDIRECTS),
   ...toRedirects(SITE_PATH_REDIRECTS),
+  ...toRedirects(CANON_BREADCRUMB_REDIRECTS),
   ...toRedirects(STRIP_TRAILING_REDIRECTS),
   ...toRedirects(BROKEN_PROTOCOL_REDIRECTS),
   ...COMPLEX_REDIRECTS,
