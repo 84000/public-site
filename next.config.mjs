@@ -508,6 +508,7 @@ const READING_PAGE_REWRITES = [
   ["/reading-room", HOSTS.READING],
   ["/entity/:type/:slug", `${HOSTS.READING}/translation/entity/:type/:slug`],
   ["/api/feedback", `${HOSTS.READING}/api/feedback`],
+  ["/api/og", `${HOSTS.READING}/api/og`],
 ];
 
 /** @type {[string, string][]} */
