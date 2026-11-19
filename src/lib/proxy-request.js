@@ -18,6 +18,7 @@ function isReadingRoomProxiedPath(pathname) {
     pathname.startsWith("/reading-room/") ||
     pathname.startsWith("/entity/") ||
     pathname === "/api/feedback" ||
+    pathname === "/api/og" ||
     pathname.startsWith("/.well-known/")
   );
 }
@@ -26,7 +27,7 @@ function isReadingRoomProxiedPath(pathname) {
  * Paths rewritten to brand.84000.co (catch-all in next.config.mjs).
  * Mirrors the negative-lookahead exclusions in SITE_REWRITES.
  */
-function isBrandProxiedPath(pathname) {
+export function isBrandProxiedPath(pathname) {
   const path = pathname.replace(/^\//, "");
   if (!path) {
     return false;
@@ -39,6 +40,9 @@ function isBrandProxiedPath(pathname) {
     return false;
   }
   if (path === "reading-room" || path.startsWith("reading-room/")) {
+    return false;
+  }
+  if (path === "llms.txt" || path === "llms-full.txt") {
     return false;
   }
   if (

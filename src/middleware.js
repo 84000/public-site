@@ -1,7 +1,21 @@
 import { NextResponse } from "next/server";
 // TO DO: import these from static repo
 import workIds from "./public/work-ids.json";
-import { isProxiedPath, PROXY_USER_AGENT } from "./lib/proxy-request";
+import {
+  isBrandProxiedPath,
+  isProxiedPath,
+  PROXY_USER_AGENT,
+} from "./lib/proxy-request";
+import {
+  acceptsMarkdown,
+  linkedPage,
+  markdownNotFound,
+  markdownRewriteUrl,
+} from "./lib/markdown-for-agents";
+import {
+  agentDiscoveryResponse,
+  isAgentDiscoveryPath,
+} from "./lib/agent-discovery";
 
 function withProxyUserAgent(request) {
   const headers = new Headers(request.headers);
@@ -70,8 +84,37 @@ function handleAssetRedirect(request) {
 export function middleware(request) {
   const { pathname } = request.nextUrl;
 
+  // Markdown for AI agents: .md addresses, llms.txt, and Accept/user-agent negotiation on page addresses.
+  // Runs first, because the proxy step below replaces the visitor's user agent.
+  const markdown = markdownRewriteUrl(request);
+  if (markdown) {
+    return NextResponse.rewrite(markdown);
+  }
+
+  // Agent discovery files (Agent Skills index and skill, AI catalog). Other /.well-known/ paths still go to the Reading Room.
+  if (isAgentDiscoveryPath(pathname)) {
+    return agentDiscoveryResponse(pathname);
+  }
+
   if (/^\/(translation|source|pdf|epub)-redirect\//i.test(pathname)) {
     return handleAssetRedirect(request);
+  }
+
+  // Translation pages and the home page: same destination as next.config.mjs, plus a Link header for AI agents.
+  const page = linkedPage(request);
+  if (page) {
+    const headers = new Headers(request.headers);
+    if (page.proxyUserAgent) headers.set("user-agent", PROXY_USER_AGENT);
+    const response = NextResponse.rewrite(page.url, { request: { headers } });
+    response.headers.set("Link", page.link);
+    return response;
+  }
+
+  // An agent asking for Markdown on a Webflow page that doesn't exist gets a Markdown 404 instead of the HTML one.
+  if (acceptsMarkdown(request) && isBrandProxiedPath(pathname)) {
+    return markdownNotFound(request, PROXY_USER_AGENT).then(
+      (notFound) => notFound || withProxyUserAgent(request),
+    );
   }
 
   if (isProxiedPath(pathname)) {
@@ -81,6 +124,9 @@ export function middleware(request) {
 
 export const config = {
   matcher: [
+    "/",
+    "/llms.txt",
+    "/llms-full.txt",
     "/translation-redirect/:path*",
     "/source-redirect/:path*",
     "/pdf-redirect/:path*",
@@ -100,6 +146,7 @@ export const config = {
     "/reading-room/:path*",
     "/entity/:type/:slug",
     "/api/feedback",
+    "/api/og",
     "/.well-known/:path*",
     "/:path((?!translation/|canon$|canon/|curated-collection|reading-room|glossary/|public|assets|images|api|sitemap-0.xml|sitemap.xml|sitemap/|_next/|\\.well-known/|translation-redirect/|source-redirect/|pdf-redirect/|epub-redirect/|source/).*)",
   ],
