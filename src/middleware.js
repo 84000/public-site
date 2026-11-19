@@ -81,7 +81,72 @@ function handleAssetRedirect(request) {
   );
 }
 
+/** User agents of AI assistants, search and crawlers that are redirected to /translation/<slug>.md. */
+const AI_AGENT_USER_AGENTS = [
+  "GPTBot",
+  "ChatGPT-User",
+  "OAI-SearchBot",
+  "ClaudeBot",
+  "Claude-User",
+  "Claude-SearchBot",
+  "anthropic-ai",
+  "PerplexityBot",
+  "Perplexity-User",
+  "Google-Extended",
+  "Bytespider",
+  "CCBot",
+  "meta-externalagent",
+  "meta-externalfetcher",
+  "MistralAI-User",
+  "DuckAssistBot",
+  "Applebot-Extended",
+  "cohere-ai",
+];
+const AI_AGENT_UA = new RegExp(AI_AGENT_USER_AGENTS.join("|"), "i");
+const VERIFIED_AI_CATEGORIES = ["AI Assistant", "AI Search", "AI Crawler"];
+const AGENT_VARY = "User-Agent, Accept";
+
+function isAiAgent(request) {
+  // Optional: set upstream by a Cloudflare Transform Rule from Cloudflare's verified-bot data.
+  // It's the only signal a client can't spoof; absent when the request doesn't come through Cloudflare.
+  const category = request.headers.get("x-verified-bot-category");
+  if (category && VERIFIED_AI_CATEGORIES.includes(category)) return true;
+  if (acceptsMarkdown(request)) return true;
+  return AI_AGENT_UA.test(request.headers.get("user-agent") || "");
+}
+
+/**
+ * AI agents on /translation/<slug> get a 302 to /translation/<slug>.md (query kept). Returns null to carry on.
+ * Skips the /translation index and any last segment with a file extension (.md, .pdf, .epub, ...), so no loops.
+ */
+function translationAgentRedirect(request) {
+  const { pathname, search } = request.nextUrl;
+  const path = pathname.replace(/\/+$/, "");
+  if (!path.startsWith("/translation/")) return null;
+  if (/\.[^/]*$/.test(path)) return null;
+  if (!isAiAgent(request)) return null;
+  const url = request.nextUrl.clone();
+  url.pathname = `${path}.md`;
+  url.search = search;
+  const response = NextResponse.redirect(url, 302);
+  response.headers.set("Vary", AGENT_VARY);
+  response.headers.set("Cache-Control", "private, no-store");
+  return response;
+}
+
 export function middleware(request) {
+  const redirect = translationAgentRedirect(request);
+  if (redirect) return redirect;
+
+  if (!request.nextUrl.pathname.startsWith("/translation/")) {
+    return routeRequest(request);
+  }
+  const response = routeRequest(request) || NextResponse.next();
+  response.headers.set("Vary", AGENT_VARY);
+  return response;
+}
+
+function routeRequest(request) {
   const { pathname } = request.nextUrl;
 
   // Markdown for AI agents: .md addresses, llms.txt, and Accept/user-agent negotiation on page addresses.
