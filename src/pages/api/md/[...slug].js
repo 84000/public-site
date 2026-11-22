@@ -21,14 +21,14 @@ const FILE = /^(part-[1-9][0-9]{0,2}|full|summary|faq)$/;
 const MARKDOWN = "text/markdown; charset=utf-8";
 const TEXT = "text/plain; charset=utf-8";
 
-// Lamatic saves text files with ".txt" added: md/en/toh21/page.md is stored as md/en/toh21/page.md.txt.
+// Storage file names match the public addresses: /translation/toh21.md is md/en/toh21/page.md.
 function target(slug) {
   const [first, second, ...rest] = slug;
   if (first === "site") {
     const page = slug.slice(1).join("/");
     if (!SITE_PAGE_PATH.test(page)) return null;
     return {
-      path: `md/site/${page}.md.txt`,
+      path: `md/site/${page}.md`,
       type: MARKDOWN,
       canonical: `${SITE}/${page}`,
       site: page,
@@ -43,14 +43,14 @@ function target(slug) {
   const canonical = `${SITE}/translation/${first}`;
   if (!second || second === "part-1")
     return {
-      path: `md/en/${first}/page.md.txt`,
+      path: `md/en/${first}/page.md`,
       type: MARKDOWN,
       canonical,
       toh: first,
     };
   if (!FILE.test(second)) return null;
   return {
-    path: `md/en/${first}/${second}.md.txt`,
+    path: `md/en/${first}/${second}.md`,
     type: MARKDOWN,
     canonical,
     toh: first,

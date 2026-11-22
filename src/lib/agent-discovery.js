@@ -54,8 +54,8 @@ titles and \`toh21\` in addresses.
 
 - Passages carry the same labels as on the website, for example 1.3. Each label is followed by the passage's
   permanent ID in square brackets, and by a Toh number when the passage belongs to one Toh only: **1.3** [ID] or
-  **1.3** [ID, toh535]. To link to one passage, use ${SITE}/entity/passage/ID?toh=TOH, with the file's own Toh number
-  when none is given.
+  **1.3** [ID, toh535]. To link to one passage, use ${SITE}/entity/passage/ID?toh=TOH, where TOH is the Toh number
+  shown after the ID, or the file's own Toh number if none is shown.
 - In the text, [n.12] marks a note. The notes come at the end of the file, or of the part. Leave note markers and
   passage IDs out of quotations.
 - Cite the title, the Toh number, the passage label and its link, for example: The Heart of the Perfection of Wisdom,
